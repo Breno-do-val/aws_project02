@@ -39,26 +39,31 @@ public class ProductEventConsumer {
 
         SnsMessage snsMessage = objectMapper.readValue(textMessage.getText(),
                 SnsMessage.class);
+
         Envelope envelope = objectMapper.readValue(snsMessage.getMessage(),
                 Envelope.class);
+
         ProductEvent productEvent = objectMapper.readValue(
                 envelope.getData(), ProductEvent.class);
+
         log.info("Product event received - Event: {} - ProductId: {} - " +
                         "MessageId: {}", envelope.getEventType(),
                 productEvent.getProductId(), snsMessage.getMessageId());
 
         ProductEventLog productEventLog = buildProductEventLog(envelope,
                 productEvent);
+
         productEventLogRepository.save(productEventLog);
     }
 
-    ProductEventLog buildProductEventLog(Envelope envelope,
+    private ProductEventLog buildProductEventLog(Envelope envelope,
                                          ProductEvent productEvent) {
         ProductEventLog productEventLog = new ProductEventLog();
         productEventLog.setEventType(envelope.getEventType());
         productEventLog.setProductId(productEvent.getProductId());
         productEventLog.setCode(productEvent.getCode());
         productEventLog.setUsername(productEvent.getUsername());
+
         productEventLog.setTimestamp(Instant.now().toEpochMilli());
 
         productEventLog.setTtl(Instant.now().plus(

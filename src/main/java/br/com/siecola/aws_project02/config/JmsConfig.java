@@ -21,6 +21,7 @@ public class JmsConfig {
     private String awsRegion;
 
     private SQSConnectionFactory sqsConnectionFactory;
+
     @Bean
     public DefaultJmsListenerContainerFactory jmsListenerContainerFactory() {
         sqsConnectionFactory = new SQSConnectionFactory(
@@ -32,6 +33,7 @@ public class JmsConfig {
 
         DefaultJmsListenerContainerFactory factory =
                 new DefaultJmsListenerContainerFactory();
+
         factory.setConnectionFactory(sqsConnectionFactory);
         factory.setDestinationResolver(new DynamicDestinationResolver());
         factory.setConcurrency("2");
